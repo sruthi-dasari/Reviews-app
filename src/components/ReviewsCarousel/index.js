@@ -3,13 +3,38 @@ import './index.css'
 
 class ReviewsCarousel extends Component {
   state = {
-    username: '',
+    activeReviewIndex: 0,
   }
 
-  onClickLeftArr = () => {}
+  onLeftArrClick = firstIndex => {
+    const {activeReviewIndex} = this.state
+    if (activeReviewIndex > firstIndex) {
+      this.setState(prevState => ({
+        activeReviewIndex: prevState.activeReviewIndex - 1,
+      }))
+    } else if (activeReviewIndex === firstIndex) {
+      this.setState({activeReviewIndex: firstIndex})
+    }
+  }
+
+  onRightArrClick = lastIndex => {
+    const {activeReviewIndex} = this.state
+    if (activeReviewIndex < lastIndex) {
+      this.setState(prevState => ({
+        activeReviewIndex: prevState.activeReviewIndex + 1,
+      }))
+    } else if (activeReviewIndex === lastIndex) {
+      this.setState({activeReviewIndex: lastIndex})
+    }
+  }
 
   render() {
     const {reviewsList} = this.props
+    const {activeReviewIndex} = this.state
+    const reviewObj = reviewsList[activeReviewIndex]
+
+    const lastIndex = reviewsList.length() - 1
+    const firstIndex = 0
 
     return (
       <div className="app-container">
@@ -17,7 +42,7 @@ class ReviewsCarousel extends Component {
         <div className="outer-container">
           <button
             className="left-arr-btn btn"
-            onClick={this.onClickLeftArr}
+            onClick={this.onLeftArrClick}
             type="button"
           >
             <img
@@ -28,11 +53,14 @@ class ReviewsCarousel extends Component {
           </button>
 
           <ul className="main-content-container">
-            {reviewsList.map(eachObj => (
-              <PersonItem personDetails={eachObj} />
-            ))}
+            <PersonItem personDetails={reviewObj} />
           </ul>
-          <button className="right-arr-btn btn" type="button">
+
+          <button
+            className="right-arr-btn btn"
+            type="button"
+            onClick={this.onRightArrClick}
+          >
             <img
               src="https://assets.ccbp.in/frontend/react-js/right-arrow-img.png"
               alt="right arrow"
